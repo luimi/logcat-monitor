@@ -1,0 +1,166 @@
+<html ng-app="logcatMonitor">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+    <style>
+        .alert {
+            margin-bottom: 0;
+            padding: 5px 10px;
+        }
+    </style>
+    <script>
+        angular.module('logcatMonitor', [])
+            .controller('LogcatMonitorController', function ($scope, $location, $anchorScroll) {
+                const app = this;
+                const logcat = /^\d+-\d+\s+\d+:\d+:\d+.\d+\s+\d+\s+\d+\s+[A-Z]\s[\s\S]+/
+                const logcatMessage = /^\d+-\d+\s+\d+:\d+:\d+.\d+\s+\d+\s+\d+\s+[A-Z]\s/
+                const logcatTitle = /^[\S\s]*?:/
+                const logcatSpaces = /\s+/
+                const wsURL = "wss://logcatmonitor.glitch.me"
+                app.status = "connecting";
+                app.logs = [];
+                app.groups = [];
+                app.group = "";
+                app.processIds = [];
+                app.filter = "";
+                app.autoscroll = true;
+                app.onGroupSelected = () => {
+                    subscribe(app.group);
+                }
+                app.onFilterSelected = (filter) => {
+                    app.filter = filter;
+                }
+                var ws;
+
+                const connect = () => {
+                    ws = new WebSocket(wsURL);
+                    ws.onopen = () => {
+                        console.log("connected");
+                        app.status = "connected";
+                        ws.send(JSON.stringify({ event: 'getGroups', data: {} }));
+                        $scope.$apply();
+                    };
+                    ws.onclose = () => {
+                        console.log("disconnected")
+                        app.status = "disconnected";
+                        setTimeout(() => {
+                            connect();
+                        }, 3000);
+                        $scope.$apply();
+                    };
+                    ws.onmessage = (event) => {
+                        console.log("message",event.data);
+                        try {
+                            let obj = JSON.parse(event.data)
+                            events[obj.event](obj.data);
+                        } catch (e) {
+                            if (logcat.test(event.data)) {
+                                let log = log2object(event.data);
+                                app.logs.push(log);
+                                if (app.processIds.indexOf(log.process) == -1) {
+                                    app.processIds.push(log.process);
+                                }
+                                $scope.$apply();
+                                if (app.autoscroll) {
+                                    $location.hash('bottom');
+                                    $anchorScroll();
+                                }
+
+                            }
+
+                        }
+                    };
+
+                }
+                const events = {
+                    groups: ({ list }) => {
+                        list.forEach(group => {
+                            app.groups.push(group);
+                        });
+                        if (list.length > 0) {
+                            app.group = list[0];
+                            subscribe(list[0]);
+                            console.log(list[0]);
+                            //$scope.$apply();
+                        }
+
+                    }
+                }
+                const subscribe = (group) => {
+                    ws.send(JSON.stringify({ event: 'subscribe', data: { group: group } }));
+                }
+                const log2object = (data) => {
+                    let body = data.replace(logcatMessage, "");
+                    let message = body.replace(logcatTitle, "");
+                    let title = body.replace(message, "");
+                    let header = data.replace(body, "");
+                    header = header.split(logcatSpaces);
+                    return {
+                        date: header[0],
+                        time: header[1],
+                        process: header[2],
+                        threadid: header[3],
+                        type: header[4],
+                        message: message,
+                        title: title
+                    };
+                }
+                connect();
+            });
+    </script>
+</head>
+
+<body ng-controller="LogcatMonitorController as lcm">
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="32.163 68.509 203.691 228.155"><path d="M101.885 207.092c7.865 0 14.241 6.376 14.241 14.241v61.09c0 7.865-6.376 14.24-14.241 14.24-7.864 0-14.24-6.375-14.24-14.24v-61.09c0-7.864 6.376-14.24 14.24-14.24z" fill="#a4c639"/><path d="M69.374 133.645c-.047.54-.088 1.086-.088 1.638v92.557c0 9.954 7.879 17.973 17.66 17.973h94.124c9.782 0 17.661-8.02 17.661-17.973v-92.557c0-.552-.02-1.1-.066-1.638H69.374z" fill="#a4c639"/><path d="M166.133 207.092c7.865 0 14.241 6.376 14.241 14.241v61.09c0 7.865-6.376 14.24-14.241 14.24-7.864 0-14.24-6.375-14.24-14.24v-61.09c0-7.864 6.376-14.24 14.24-14.24zM46.405 141.882c7.864 0 14.24 6.376 14.24 14.241v61.09c0 7.865-6.376 14.241-14.24 14.241-7.865 0-14.241-6.376-14.241-14.24v-61.09c-.001-7.865 6.375-14.242 14.241-14.242zM221.614 141.882c7.864 0 14.24 6.376 14.24 14.241v61.09c0 7.865-6.376 14.241-14.24 14.241-7.865 0-14.241-6.376-14.241-14.24v-61.09c0-7.865 6.376-14.242 14.241-14.242zM69.79 127.565c.396-28.43 25.21-51.74 57.062-54.812h14.312c31.854 3.073 56.666 26.384 57.062 54.812H69.79z" fill="#a4c639"/><path d="M74.743 70.009l15.022 26.02M193.276 70.009l-15.023 26.02" fill="none" stroke="#a4c639" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M114.878 102.087c.012 3.974-3.277 7.205-7.347 7.216-4.068.01-7.376-3.202-7.388-7.176v-.04c-.011-3.975 3.278-7.205 7.347-7.216 4.068-.011 7.376 3.2 7.388 7.176v.04zM169.874 102.087c.012 3.974-3.277 7.205-7.347 7.216-4.068.01-7.376-3.202-7.388-7.176v-.04c-.011-3.975 3.278-7.205 7.347-7.216 4.068-.011 7.376 3.2 7.388 7.176v.04z" fill="#fff"/></svg>
+                Logcat Monitor
+            </span>
+            <div class="d-flex">
+                <div class="me-2">
+                    <input type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off" ng-model="lcm.autoscroll">
+                    <label class="btn btn-outline-light" for="btn-check-outlined">Autoscroll</label>
+                </div>
+                <select class="form-select form-select-sm me-2" aria-label="group" ng-model="lcm.group" ng-change="lcm.onGroupSelected()">
+                    <option selected value="">Device</option>
+                    <option ng-repeat="group in lcm.groups" value="{{group}}">{{group}}</option>
+                </select>
+                <select class="form-select form-select-sm me-2" aria-label="id" ng-model="lcm.filter">
+                    <option selected value="">Filter</option>
+                    <option ng-repeat="filter in lcm.processIds" value="{{filter}}">{{filter}}</option>
+                </select>
+                <div class="alert"
+                    ng-class="{'alert-secondary': lcm.status == 'connecting', 'alert-success': lcm.status == 'connected', 'alert-danger': lcm.status == 'disconnected'}"
+                    role="alert">
+                    {{lcm.status}}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mt-5 mb-5 p-5" id="messages">
+        <div class="card" ng-repeat="log in lcm.logs | filter: lcm.filter" ng-click="lcm.onFilterSelected(log.process)">
+            <h5 class="card-header ">
+                <span class="badge" ng-class="{'bg-primary': log.type=='V', 'bg-success': log.type=='D', 'bg-danger': log.type=='E', 'bg-info': log.type=='I', 'bg-warning': log.type=='W'}">{{log.type}}</span>
+                <span class="badge bg-secondary">{{log.date}} {{log.time}}</span>
+                <span class="badge bg-dark">{{log.process}}</span>
+                <span class="badge bg-dark">{{log.threadid}}</span>
+                {{log.title}}
+            </h5>
+            <div class="card-body">
+                <p class="card-text">{{log.message}}</p>
+            </div>
+        </div>
+        <a id="bottom"></a>
+    </div>
+</body>
+
+</html>

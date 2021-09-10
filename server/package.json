@@ -1,0 +1,18 @@
+{
+  "name": "logcat-monitor",
+  "version": "1.0.0",
+  "description": "server for logcat monitor",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "logcat"
+  ],
+  "author": "lui2mi",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "ws": "^8.2.2"
+  }
+}
