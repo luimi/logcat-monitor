@@ -23,7 +23,7 @@
                 const logcatMessage = /^\d+-\d+\s+\d+:\d+:\d+.\d+\s+\d+\s+\d+\s+[A-Z]\s/
                 const logcatTitle = /^[\S\s]*?:/
                 const logcatSpaces = /\s+/
-                const wsURL = "wss://logcatmonitor.glitch.me"
+                const wsURL = $location.absUrl().replace("https","wss");
                 app.status = "connecting";
                 app.logs = [];
                 app.groups = [];
