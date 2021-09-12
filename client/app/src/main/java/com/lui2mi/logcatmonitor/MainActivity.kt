@@ -34,12 +34,14 @@ class MainActivity : AppCompatActivity() {
         override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
             bind = p1 as MainService.Bind
             bind.logCallback = {
-                val adapter = logs.adapter as LogAdapter
-                adapter.logs.add(it)
-                runOnUiThread {
-                    adapter.notifyDataSetChanged()
-                    if(autoscroll.isChecked)
-                        logs.scrollToPosition(adapter.logs.size-1)
+                if(com.lui2mi.logcatmonitor.models.Log.isLog(it)){
+                    val adapter = logs.adapter as LogAdapter
+                    adapter.logs.add(com.lui2mi.logcatmonitor.models.Log(it))
+                    runOnUiThread {
+                        adapter.notifyDataSetChanged()
+                        if(autoscroll.isChecked)
+                            logs.scrollToPosition(adapter.logs.size-1)
+                    }
                 }
             }
             bind.wsCallback = {

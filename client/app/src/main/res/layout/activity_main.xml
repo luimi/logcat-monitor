@@ -18,6 +18,7 @@
         android:background="@drawable/bg_code"
         android:gravity="center"
         android:text="AAAA"
+        android:textColor="@color/white"
         android:textSize="60sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -40,16 +41,19 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1">
-            <Button
+
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_update"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/bg_button"
                 android:text="Update code" />
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_start_stop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_button"
                 android:text="Start" />
         </LinearLayout>
 
@@ -68,25 +72,31 @@
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+
                     <TextView
-                        android:text="Service"/>
+                        android:text="Service"
+                        android:textColor="@color/black" />
 
                     <TextView
                         android:id="@+id/tv_service"
                         android:gravity="start"
-                        android:text="Not running" />
+                        android:text="Not running"
+                        android:textColor="@color/black" />
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+
                     <TextView
-                        android:text="Websocket"/>
+                        android:text="Websocket"
+                        android:textColor="@color/black" />
 
                     <TextView
                         android:id="@+id/tv_websocket"
                         android:gravity="start"
-                        android:text="Not connected" />
+                        android:text="Not connected"
+                        android:textColor="@color/black" />
                 </TableRow>
                 <TableRow android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -97,8 +107,9 @@
                         android:checked="true"
                         android:text="Autoscroll" />
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btn_clear"
+                        android:background="@drawable/bg_button"
                         android:text="Clear" />
                 </TableRow>
 
