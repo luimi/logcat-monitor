@@ -1,4 +1,4 @@
-package com.lui2mi.logcatmonitor.models
+package com.lui2mi.logcatmonitorsample.models
 
 import com.google.gson.Gson
 

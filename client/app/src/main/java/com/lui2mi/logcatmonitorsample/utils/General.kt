@@ -1,16 +1,12 @@
-package com.lui2mi.logcatmonitor.utils
+package com.lui2mi.logcatmonitorsample.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.app.Application
 
 import android.app.ActivityManager
-import android.app.Dialog
 import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
-import com.lui2mi.logcatmonitor.MainService
+import com.lui2mi.logcatmonitorsample.MainService
 
 
 class General {

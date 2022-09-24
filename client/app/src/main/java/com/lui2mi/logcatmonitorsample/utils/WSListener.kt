@@ -1,18 +1,11 @@
-package com.lui2mi.logcatmonitor.utils
+package com.lui2mi.logcatmonitorsample.utils
 
-import android.util.Log
-import com.jaredrummler.ktsh.Shell
-import com.lui2mi.logcatmonitor.MainService
-import com.lui2mi.logcatmonitor.models.Event
-import com.lui2mi.logcatmonitor.models.Message
-import com.lui2mi.logcatmonitor.models.Subscription
+import com.lui2mi.logcatmonitorsample.MainService
+import com.lui2mi.logcatmonitorsample.models.Event
+import com.lui2mi.logcatmonitorsample.models.Subscription
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
-import okio.ByteString
-import java.io.BufferedReader
-import java.io.DataOutputStream
-import java.io.InputStreamReader
 
 class WSListener(val group: String, val bind: MainService.Bind): WebSocketListener() {
     var connected = false

@@ -1,4 +1,4 @@
-package com.lui2mi.logcatmonitor
+package com.lui2mi.logcatmonitorsample
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

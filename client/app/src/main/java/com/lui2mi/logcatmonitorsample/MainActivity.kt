@@ -1,4 +1,4 @@
-package com.lui2mi.logcatmonitor
+package com.lui2mi.logcatmonitorsample
 
 import android.content.ComponentName
 import android.content.Intent
@@ -6,7 +6,6 @@ import android.content.ServiceConnection
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -14,8 +13,8 @@ import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.lui2mi.logcatmonitor.utils.General
-import com.lui2mi.logcatmonitor.utils.LogAdapter
+import com.lui2mi.logcatmonitorsample.utils.General
+import com.lui2mi.logcatmonitorsample.utils.LogAdapter
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,9 +33,9 @@ class MainActivity : AppCompatActivity() {
         override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
             bind = p1 as MainService.Bind
             bind.logCallback = {
-                if(com.lui2mi.logcatmonitor.models.Log.isLog(it)){
+                if(com.lui2mi.logcatmonitorsample.models.Log.isLog(it)){
                     val adapter = logs.adapter as LogAdapter
-                    adapter.logs.add(com.lui2mi.logcatmonitor.models.Log(it))
+                    adapter.logs.add(com.lui2mi.logcatmonitorsample.models.Log(it))
                     runOnUiThread {
                         adapter.notifyDataSetChanged()
                         if(autoscroll.isChecked)

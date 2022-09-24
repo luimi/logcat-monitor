@@ -1,4 +1,4 @@
-package com.lui2mi.logcatmonitor.utils
+package com.lui2mi.logcatmonitorsample.utils
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.lui2mi.logcatmonitor.R
-import com.lui2mi.logcatmonitor.models.Log
+import com.lui2mi.logcatmonitorsample.R
+import com.lui2mi.logcatmonitorsample.models.Log
 
 class LogAdapter(val context: Context): RecyclerView.Adapter<LogAdapter.LogHolder>() {
     var logs: ArrayList<Log> = arrayListOf()

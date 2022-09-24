@@ -7,7 +7,7 @@ android {
     compileSdk 30
 
     defaultConfig {
-        applicationId "com.lui2mi.logcatmonitor"
+        applicationId "com.lui2mi.logcatmonitorsample"
         minSdk 21
         targetSdk 30
         versionCode 1

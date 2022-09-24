@@ -1,4 +1,4 @@
-package com.lui2mi.logcatmonitor
+package com.lui2mi.logcatmonitorsample
 
 import org.junit.Test
 

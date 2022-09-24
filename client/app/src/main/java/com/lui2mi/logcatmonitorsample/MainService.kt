@@ -1,4 +1,4 @@
-package com.lui2mi.logcatmonitor
+package com.lui2mi.logcatmonitorsample
 
 
 import android.app.Service
@@ -7,12 +7,11 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.util.Log
 import com.jaredrummler.ktsh.Shell
-import com.lui2mi.logcatmonitor.models.Event
-import com.lui2mi.logcatmonitor.models.Message
-import com.lui2mi.logcatmonitor.utils.General
-import com.lui2mi.logcatmonitor.utils.WSListener
+import com.lui2mi.logcatmonitorsample.models.Event
+import com.lui2mi.logcatmonitorsample.models.Message
+import com.lui2mi.logcatmonitorsample.utils.General
+import com.lui2mi.logcatmonitorsample.utils.WSListener
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket

@@ -1,8 +1,4 @@
-package com.lui2mi.logcatmonitor.models
-
-import android.R.attr
-import android.R.attr.data
-import android.util.Log
+package com.lui2mi.logcatmonitorsample.models
 
 
 class Log(val data: String) {
