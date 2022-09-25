@@ -8,3 +8,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "LogcatMonitor"
 include ':app'
+include ':logcatmonitor'

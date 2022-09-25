@@ -1,5 +1,4 @@
-package com.lui2mi.logcatmonitorsample
-
+package com.lui2mi.logcatmonitor
 
 import android.app.Service
 import android.content.Intent
@@ -7,11 +6,11 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.provider.Settings
 import com.jaredrummler.ktsh.Shell
-import com.lui2mi.logcatmonitorsample.models.Event
-import com.lui2mi.logcatmonitorsample.models.Message
-import com.lui2mi.logcatmonitorsample.utils.General
-import com.lui2mi.logcatmonitorsample.utils.WSListener
+import com.lui2mi.logcatmonitor.models.Event
+import com.lui2mi.logcatmonitor.models.Message
+import com.lui2mi.logcatmonitor.utils.WSListener
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
@@ -21,12 +20,12 @@ class MainService: Service() {
     lateinit var ws: WebSocket
     lateinit var wsListener: WSListener
     lateinit var shell: Shell
-    lateinit var code: String
-    lateinit var server: String
-    val stdOutLineListener = object : Shell.OnLineListener{
+    var code: String = ""
+    var server: String = ""
+    val stdOutLineListener = object : Shell.OnLineListener {
         override fun onLine(line: String) {
             binder.callLog(line)
-            ws.send(Event("send", Message(code!!,line)).toString())
+            ws.send(Event("send", Message(code!!, line)).toString())
         }
     }
     override fun onBind(p0: Intent?): IBinder? {
@@ -34,13 +33,21 @@ class MainService: Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        server = General.getSharedPreferences(this).getString("server","")!!
-        code = General.getSharedPreferences(this).getString("code","NTFD")!!
-        if(server.isEmpty() || server.isBlank() || code.isEmpty() || code.isBlank()){
-
+        // SERVER
+        server = if(intent?.hasExtra("server")!!)
+            intent?.getStringExtra("server").toString()
+        else
+            ""
+        // CODE
+        code = if(intent?.hasExtra("code")!!)
+            intent?.getStringExtra("code").toString()
+        else
+            Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID)
+        if(server.isEmpty() || server.isBlank()){
+            this.stopSelf()
         } else {
-            startLog()
             startWebsocket()
+            startLog()
         }
         return START_NOT_STICKY
     }
@@ -61,9 +68,11 @@ class MainService: Service() {
         ws = client.newWebSocket(request,wsListener)
     }
     override fun onDestroy() {
-        shell.interrupt()
-        shell.removeOnStdoutLineListener(stdOutLineListener)
-        if(wsListener.connected){
+        if(this::shell.isInitialized){
+            shell.interrupt()
+            shell.removeOnStdoutLineListener(stdOutLineListener)
+        }
+        if(this::wsListener.isInitialized && wsListener.connected){
             ws.close(1000,"End")
         }
         super.onDestroy()

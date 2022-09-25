@@ -1,15 +1,11 @@
 package com.lui2mi.logcatmonitorsample.utils
 
 import android.content.Context
-import android.content.SharedPreferences
-
-import android.app.ActivityManager
 import android.content.DialogInterface
+import android.content.SharedPreferences
 import androidx.appcompat.app.AlertDialog
-import com.lui2mi.logcatmonitorsample.MainService
 
-
-class General {
+class Utils {
     companion object {
         private val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
         fun getId(): String{
@@ -18,10 +14,10 @@ class General {
                 .map(charPool::get)
                 .joinToString("");
         }
-        fun getSharedPreferences(context: Context): SharedPreferences{
-            return context.getSharedPreferences("localStore",Context.MODE_PRIVATE)
+        fun getSharedPreferences(context: Context): SharedPreferences {
+            return context.getSharedPreferences("localStore", Context.MODE_PRIVATE)
         }
-        fun setString(context: Context, key: String ,value: String){
+        fun setString(context: Context, key: String, value: String){
             getSharedPreferences(context).edit().putString(key,value).commit()
         }
         fun getString(context: Context, key: String):String {
@@ -29,15 +25,6 @@ class General {
         }
         fun hasString(context: Context, key: String): Boolean {
             return getSharedPreferences(context).contains(key)
-        }
-        fun isServiceRunning(context: Context): Boolean{
-            val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager?
-            for (service in manager!!.getRunningServices(Int.MAX_VALUE)) {
-                if ((MainService::class.java).getName().equals(service.service.className)) {
-                    return true
-                }
-            }
-            return false
         }
         fun showSimpleAlertDialog(context: Context, message: String){
             val builder = AlertDialog.Builder(context)

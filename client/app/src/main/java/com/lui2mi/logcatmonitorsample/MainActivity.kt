@@ -13,8 +13,10 @@ import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.lui2mi.logcatmonitorsample.utils.General
+import com.lui2mi.logcatmonitor.MainService
+import com.lui2mi.logcatmonitor.models.Log
 import com.lui2mi.logcatmonitorsample.utils.LogAdapter
+import com.lui2mi.logcatmonitorsample.utils.Utils
 
 
 class MainActivity : AppCompatActivity() {
@@ -27,15 +29,14 @@ class MainActivity : AppCompatActivity() {
     lateinit var logs: RecyclerView
     lateinit var autoscroll: CheckBox
     lateinit var bind: MainService.Bind
-    var isRoot: Boolean = true
 
     val serviceConnection = object: ServiceConnection{
         override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
             bind = p1 as MainService.Bind
             bind.logCallback = {
-                if(com.lui2mi.logcatmonitorsample.models.Log.isLog(it)){
+                if(Log.isLog(it)){
                     val adapter = logs.adapter as LogAdapter
-                    adapter.logs.add(com.lui2mi.logcatmonitorsample.models.Log(it))
+                    adapter.logs.add(Log(it))
                     runOnUiThread {
                         adapter.notifyDataSetChanged()
                         if(autoscroll.isChecked)
@@ -66,34 +67,28 @@ class MainActivity : AppCompatActivity() {
         websocket = findViewById(R.id.tv_websocket)
         autoscroll = findViewById(R.id.cb_autoscroll)
         // getting id code
-        server.setText(General.getString(this,"server"))
-        if(General.hasString(this,"code")){
-            code = General.getString(this,"code")
+        server.setText(Utils.getString(this,"server"))
+        if(Utils.hasString(this,"code")){
+            code = Utils.getString(this,"code")
         } else {
-            code = General.getId()
-            General.setString(this,"code",code)
-        }
-        // check if its rooted
-        try{
-            Runtime.getRuntime().exec("su");
-        }catch (e: Exception){
-            isRoot = false
-            General.showSimpleAlertDialog(this, "This device is not rooted")
+            code = Utils.getId()
+            Utils.setString(this,"code",code)
         }
         // start and stop button
         start_stop.setOnClickListener {
             if(server.text.isBlank() || server.text.isEmpty()){
                 return@setOnClickListener
             }
-            if(!General.isServiceRunning(this)){
+            if(!com.lui2mi.logcatmonitor.utils.Utils.isServiceRunning(this)){
                 val intent = Intent(this, MainService::class.java)
+                intent.putExtra("server",server.text.toString())
+                intent.putExtra("code",code)
                 startService(intent)
                 intent.also { intent ->
                     bindService(intent, serviceConnection, BIND_AUTO_CREATE)
                 }
 
             } else {
-                //bind.stopService()
                 unbindService(serviceConnection)
                 stopService(Intent(this, MainService::class.java))
             }
@@ -101,15 +96,14 @@ class MainActivity : AppCompatActivity() {
         }
         // change id code manually
         update.setOnClickListener {
-            code = General.getId()
-            General.setString(this,"code",code)
+            code = Utils.getId()
+            Utils.setString(this,"code",code)
             onResume()
         }
 
         server.addTextChangedListener {
-            General.setString(this,"server",server.text.toString())
+            Utils.setString(this,"server",server.text.toString())
         }
-        start_stop.isEnabled = isRoot
         // initialize logs list
         logs.apply {
             setHasFixedSize(true)
@@ -125,7 +119,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
     fun changeStatus(){
-        val isRunning = General.isServiceRunning(this)
+        val isRunning = com.lui2mi.logcatmonitor.utils.Utils.isServiceRunning(this)
         start_stop.setText(if(isRunning) "STOP" else "START")
         update.isEnabled = !isRunning
         server.isEnabled = !isRunning
@@ -134,6 +128,6 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         findViewById<TextView>(R.id.tv_id).setText(code)
-        service.setText(if(General.isServiceRunning(this)) "Running" else "Not running")
+        service.setText(if(com.lui2mi.logcatmonitor.utils.Utils.isServiceRunning(this)) "Running" else "Not running")
     }
 }

@@ -1,4 +1,4 @@
-package com.lui2mi.logcatmonitorsample.models
+package com.lui2mi.logcatmonitor.models
 
 class Message(val group: String, val message: String) {
 }

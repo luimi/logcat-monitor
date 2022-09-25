@@ -1,8 +1,7 @@
-package com.lui2mi.logcatmonitorsample.utils
+package com.lui2mi.logcatmonitor.utils
 
-import com.lui2mi.logcatmonitorsample.MainService
-import com.lui2mi.logcatmonitorsample.models.Event
-import com.lui2mi.logcatmonitorsample.models.Subscription
+import com.lui2mi.logcatmonitor.MainService
+import com.lui2mi.logcatmonitor.models.Subscription
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
@@ -37,7 +36,7 @@ class WSListener(val group: String, val bind: MainService.Bind): WebSocketListen
         super.onOpen(webSocket, response)
         connected = true
         bind.callWs("Connected")
-        val event = Event("subscribe",Subscription(group))
+        val event = com.lui2mi.logcatmonitor.models.Event("subscribe", Subscription(group))
         webSocket.send(event.toString())
     }
 }

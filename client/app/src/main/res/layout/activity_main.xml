@@ -48,13 +48,15 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/bg_button"
-                android:text="Update code" />
+                android:text="Update code"
+                android:textColor="@color/black"/>
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_start_stop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_button"
-                android:text="Start" />
+                android:text="Start"
+                android:textColor="@color/black"/>
         </LinearLayout>
 
         <LinearLayout
@@ -74,14 +76,12 @@
                     android:layout_height="match_parent">
 
                     <TextView
-                        android:text="Service"
-                        android:textColor="@color/black" />
+                        android:text="Service" />
 
                     <TextView
                         android:id="@+id/tv_service"
                         android:gravity="start"
-                        android:text="Not running"
-                        android:textColor="@color/black" />
+                        android:text="Not running" />
                 </TableRow>
 
                 <TableRow
@@ -89,14 +89,12 @@
                     android:layout_height="match_parent">
 
                     <TextView
-                        android:text="Websocket"
-                        android:textColor="@color/black" />
+                        android:text="Websocket" />
 
                     <TextView
                         android:id="@+id/tv_websocket"
                         android:gravity="start"
-                        android:text="Not connected"
-                        android:textColor="@color/black" />
+                        android:text="Not connected" />
                 </TableRow>
                 <TableRow android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -110,7 +108,8 @@
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btn_clear"
                         android:background="@drawable/bg_button"
-                        android:text="Clear" />
+                        android:text="Clear"
+                        android:textColor="@color/black"/>
                 </TableRow>
 
             </TableLayout>
