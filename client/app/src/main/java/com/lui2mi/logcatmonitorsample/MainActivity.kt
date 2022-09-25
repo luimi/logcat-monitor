@@ -6,6 +6,7 @@ import android.content.ServiceConnection
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
+import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -26,9 +27,11 @@ class MainActivity : AppCompatActivity() {
     lateinit var websocket: TextView
     lateinit var start_stop: Button
     lateinit var update: Button
+    lateinit var log: Button
     lateinit var logs: RecyclerView
     lateinit var autoscroll: CheckBox
     lateinit var bind: MainService.Bind
+    var counter = 0
 
     val serviceConnection = object: ServiceConnection{
         override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
@@ -66,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         service = findViewById(R.id.tv_service)
         websocket = findViewById(R.id.tv_websocket)
         autoscroll = findViewById(R.id.cb_autoscroll)
+        log = findViewById(R.id.btn_log)
         // getting id code
         server.setText(Utils.getString(this,"server"))
         if(Utils.hasString(this,"code")){
@@ -117,11 +121,17 @@ class MainActivity : AppCompatActivity() {
             adapter.logs = arrayListOf()
             adapter.notifyDataSetChanged()
         }
+
+        // log button
+        log.setOnClickListener {
+            android.util.Log.v("LogCatMonitor","Log: ${counter++}")
+        }
     }
     fun changeStatus(){
         val isRunning = com.lui2mi.logcatmonitor.utils.Utils.isServiceRunning(this)
         start_stop.setText(if(isRunning) "STOP" else "START")
-        update.isEnabled = !isRunning
+        update.visibility = if(isRunning) View.GONE else View.VISIBLE
+        log.visibility = if(isRunning) View.VISIBLE else View.GONE
         server.isEnabled = !isRunning
         onResume()
     }
