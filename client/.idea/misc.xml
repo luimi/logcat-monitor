@@ -11,11 +11,11 @@
         <entry key="app/src/main/res/drawable/bg_message.xml" value="0.67" />
         <entry key="app/src/main/res/drawable/bg_secondary.xml" value="0.10520833333333333" />
         <entry key="app/src/main/res/drawable/bg_success.xml" value="0.10520833333333333" />
-        <entry key="app/src/main/res/drawable/bg_title.xml" value="0.9" />
+        <entry key="app/src/main/res/drawable/bg_title.xml" value="0.16" />
         <entry key="app/src/main/res/drawable/bg_verbose.xml" value="0.10520833333333333" />
         <entry key="app/src/main/res/drawable/bg_warning.xml" value="0.10520833333333333" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/adapter_log.xml" value="0.4722222222222222" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/adapter_log.xml" value="0.49166666666666664" />
       </map>
     </option>
   </component>

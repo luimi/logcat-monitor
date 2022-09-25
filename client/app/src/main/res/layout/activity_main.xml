@@ -40,16 +40,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="1">
+            android:layout_weight="2">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_update"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:background="@drawable/bg_button"
                 android:text="Update code"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:layout_marginBottom="5dp"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_log"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_button"
+                android:text="Log"
+                android:textColor="@color/black"
+                android:layout_marginBottom="5dp"
+                android:visibility="gone"/>
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_start_stop"
                 android:layout_width="match_parent"
@@ -69,7 +78,8 @@
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:stretchColumns="*">
+                android:stretchColumns="*"
+                android:padding="5sp">
 
                 <TableRow
                     android:layout_width="match_parent"
@@ -96,28 +106,35 @@
                         android:gravity="start"
                         android:text="Not connected" />
                 </TableRow>
-                <TableRow android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <CheckBox
-                        android:id="@+id/cb_autoscroll"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="Autoscroll" />
-
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/btn_clear"
-                        android:background="@drawable/bg_button"
-                        android:text="Clear"
-                        android:textColor="@color/black"/>
-                </TableRow>
 
             </TableLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <CheckBox
+                    android:id="@+id/cb_autoscroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="Autoscroll" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_clear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_button"
+                    android:text="Clear"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_logs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"/>
 </androidx.appcompat.widget.LinearLayoutCompat>
