@@ -40,7 +40,7 @@
                 const logcatMessage = /^\d+-\d+\s+\d+:\d+:\d+.\d+\s+\d+\s+\d+\s+[A-Z]\s/
                 const logcatTitle = /^[\S\s]*?:/
                 const logcatSpaces = /\s+/
-                const wsURL = $location.absUrl().replace("https","wss").replace("#!#bottom","");
+                const wsURL = $location.absUrl().replace("https","wss").replace("http","ws").replace("#!#bottom","");
                 //const wsURL = "https://logcat-monitor-production.up.railway.app/".replace("https", "wss");
                 var ws;
                 app.status = "connecting";
