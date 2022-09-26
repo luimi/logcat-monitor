@@ -37,9 +37,10 @@ class MainActivity : AppCompatActivity() {
         override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
             bind = p1 as MainService.Bind
             bind.logCallback = {
-                if(Log.isLog(it)){
+                val log = Log(it)
+                if(log.isLog){
                     val adapter = logs.adapter as LogAdapter
-                    adapter.logs.add(Log(it))
+                    adapter.logs.add(log)
                     runOnUiThread {
                         adapter.notifyDataSetChanged()
                         if(autoscroll.isChecked)
