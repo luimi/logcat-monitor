@@ -16,11 +16,14 @@ router.get('/', (req,res) => {
 app.use('/', router);
 const server = http.createServer(app);
 
-server.listen(process.env.PORT);
+server.listen(process.env.PORT || 8080);
 const wss = new webSocket.Server({server: server});
 
 const events = {
   subscribe: (ws,{group})=> {
+    if(!group || group==""){
+      return
+    }
     ws.group = group
     if(!groups.includes(group)){
       groups.push(group)
