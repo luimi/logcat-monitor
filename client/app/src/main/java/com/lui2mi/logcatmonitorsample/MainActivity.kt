@@ -1,7 +1,6 @@
 package com.lui2mi.logcatmonitorsample
 
 import android.content.ComponentName
-import android.content.Intent
 import android.content.ServiceConnection
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -16,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lui2mi.logcatmonitor.MainService
 import com.lui2mi.logcatmonitor.models.Log
+import com.lui2mi.logcatmonitor.models.LogCatMonitor
 import com.lui2mi.logcatmonitorsample.utils.LogAdapter
 import com.lui2mi.logcatmonitorsample.utils.Utils
 
@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var logs: RecyclerView
     lateinit var autoscroll: CheckBox
     lateinit var bind: MainService.Bind
+    lateinit var logCatMonitor: LogCatMonitor
     var counter = 0
 
     val serviceConnection = object: ServiceConnection{
@@ -85,17 +86,15 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             if(!com.lui2mi.logcatmonitor.utils.Utils.isServiceRunning(this)){
-                val intent = Intent(this, MainService::class.java)
-                intent.putExtra("server",server.text.toString())
-                intent.putExtra("code",code)
-                startService(intent)
-                intent.also { intent ->
+                logCatMonitor = LogCatMonitor(this).putServer(server.text.toString()).putCode(code)
+                logCatMonitor.start()
+                logCatMonitor.intent.also { intent ->
                     bindService(intent, serviceConnection, BIND_AUTO_CREATE)
                 }
 
             } else {
                 unbindService(serviceConnection)
-                stopService(Intent(this, MainService::class.java))
+                logCatMonitor.stop()
             }
             changeStatus()
         }
