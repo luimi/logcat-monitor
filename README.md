@@ -1,4 +1,4 @@
-#Logcat Monitor [![](https://jitpack.io/v/luimi/logcat-monitor.svg)](https://jitpack.io/#luimi/logcat-monitor)
+# Logcat Monitor [![](https://jitpack.io/v/luimi/logcat-monitor.svg)](https://jitpack.io/#luimi/logcat-monitor)
 
 This library helps Android developers to read logcats in real time remotely.
 
@@ -19,12 +19,12 @@ node server.js
 ### App
 
 ```gradle
-	allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
-	}
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
 ```
 
 ```gradle
@@ -84,7 +84,7 @@ logCatMonitor.intent.also { intent ->
 
 Open server url and check you app logcat in realtime
 
-**Docs**
+**Doc**
 
 - `Autoscroll` - Toggle autoscroll logs.
 - `Filter` - Type filter only for the Tag's you want to see.
