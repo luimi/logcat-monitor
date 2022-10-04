@@ -41,13 +41,14 @@
                 const logcatTitle = /^[\S\s]*?:/
                 const logcatSpaces = /\s+/
                 const wsURL = $location.absUrl().replace("https","wss").replace("http","ws").replace("#!#bottom","");
-                //const wsURL = "https://logcat-monitor-production.up.railway.app/".replace("https", "wss");
+                //const wsURL = "https://logcat-monitor-production.up.railway.app/".replace("https", "wss").replace("#!#bottom","");
                 var ws;
                 app.status = "connecting";
                 app.logs = [];
                 app.groups = [];
                 app.group = "";
                 app.autoscroll = true;
+                app.filter = "";
                 app.onGroupSelected = () => {
                     if(app.group!=""){
                         subscribe(app.group);
@@ -202,6 +203,9 @@
                         ng-model="lcm.autoscroll">
                     <label class="btn btn-outline-light" for="btn-check-outlined">Autoscroll</label>
                 </div>
+                <div class="me-2">
+                    <input type="text" class="form-control" id="filter" placeholder="Filter" ng-model="lcm.filter">
+                  </div>
                 <select class="form-select form-select-sm me-2" aria-label="group" ng-model="lcm.group"
                     ng-change="lcm.onGroupSelected()">
                     <option selected value="">Device</option>
@@ -221,7 +225,7 @@
     </nav>
 
     <div class="mt-5 mb-5 p-5" id="messages">
-        <div class="card" ng-repeat="log in lcm.logs">
+        <div class="card" ng-repeat="log in lcm.logs | filter: {title: lcm.filter}">
             <h5 class="card-header " ng-click="log.show=!log.show">
                 <span class="badge"
                     ng-class="{'bg-primary': log.type=='V', 'bg-success': log.type=='D', 'bg-danger': log.type=='E', 'bg-info': log.type=='I', 'bg-warning': log.type=='W'}">{{log.type}}</span>
