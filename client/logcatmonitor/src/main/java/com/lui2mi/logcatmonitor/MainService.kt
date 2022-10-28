@@ -21,6 +21,8 @@ class MainService: Service() {
     lateinit var ws: WebSocket
     lateinit var wsListener: WSListener
     lateinit var shell: Shell
+    var filters: String = ""
+    var excludes: String = ""
     var code: String = ""
     var server: String = ""
     val stdOutLineListener = object : Shell.OnLineListener {
@@ -58,6 +60,16 @@ class MainService: Service() {
         // PING
         isPing = intent?.hasExtra("ping")!!
         pingInterval =  intent?.getLongExtra("ping",30_000)!!
+        // FILTERS
+        val filter = intent?.getStringArrayListExtra("filter")
+        filter?.forEach {
+            filters += if(filters=="") "-s "+it else ","+it
+        }
+        // EXCLUDES
+        val exclude = intent?.getStringArrayListExtra("exclude")
+        exclude?.forEach {
+            excludes += it+":S "
+        }
         if(server.isEmpty() || server.isBlank()){
             this.stopSelf()
         } else {
@@ -75,7 +87,7 @@ class MainService: Service() {
             shell = Shell("sh")
             shell.addOnStdoutLineListener(stdOutLineListener)
             shell.run("logcat -c")
-            shell.run("logcat pid=${android.os.Process.myPid()}")
+            shell.run("logcat pid=${android.os.Process.myPid()} ${filters} ${excludes}")
         }.start()
     }
     fun startWebsocket(){

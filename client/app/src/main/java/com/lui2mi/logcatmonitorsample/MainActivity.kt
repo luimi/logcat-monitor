@@ -90,6 +90,8 @@ class MainActivity : AppCompatActivity() {
                     .putServer(server.text.toString())
                     .putCode(code)
                     .setPing()
+                    .setExcludeByTag(arrayListOf("NetworkSecurityConfig","zygote","System","View"))
+                    .setFilterByTag(arrayListOf("Ping","LogCatMonitor"))
                 logCatMonitor.start()
                 logCatMonitor.intent.also { intent ->
                     bindService(intent, serviceConnection, BIND_AUTO_CREATE)

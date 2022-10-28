@@ -26,6 +26,14 @@ class LogCatMonitor(val context: Context) {
     fun setPing() : LogCatMonitor {
         return setPing(30_000)
     }
+    fun setFilterByTag(filters: ArrayList<String>): LogCatMonitor {
+        intent.putExtra("filter", filters)
+        return this
+    }
+    fun setExcludeByTag(excludes: ArrayList<String>): LogCatMonitor {
+        intent.putExtra("exclude", excludes)
+        return this
+    }
     fun start(){
         context.startService(intent)
     }
