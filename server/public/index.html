@@ -26,6 +26,7 @@
             font-size: 12px;
             font-weight: 200;
         }
+
         .icon {
             width: 20px;
             height: 20px;
@@ -41,7 +42,7 @@
                 const logcatTitle = /^[\S\s]*?:/
                 const logcatSpaces = /\s+/
                 const wsURL = $location.absUrl().replace("https","wss").replace("http","ws").replace("#!#bottom","");
-                //const wsURL = "https://logcat-monitor-production.up.railway.app/".replace("https", "wss").replace("#!#bottom","");
+                //const wsURL = "https://logcat-monitor-production.up.railway.app/".replace("https", "wss").replace("#!#bottom", "");
                 var ws;
                 app.status = "connecting";
                 app.logs = [];
@@ -50,7 +51,7 @@
                 app.autoscroll = true;
                 app.filter = "";
                 app.onGroupSelected = () => {
-                    if(app.group!=""){
+                    if (app.group != "") {
                         subscribe(app.group);
                     }
                 }
@@ -82,7 +83,6 @@
                         message: log.match(message)[0].replace(/:\s/, ""),
                         date: cd.getMonth() + "-" + cd.getDate(),
                         time: cd.getHours() + ":" + cd.getMinutes() + ":" + cd.getSeconds() + "." + cd.getMilliseconds()
-
                     }
                 }
                 const getA6Logcat = (log) => {
@@ -107,18 +107,18 @@
                 const connect = () => {
                     ws = new WebSocket(wsURL);
                     ws.onopen = () => {
-                        console.log("connect","connected");
+                        console.log("connect", "connected");
                         app.status = "connected";
-                        if(app.group){
+                        if (app.group) {
                             subscribe(app.group);
                         } else {
                             app.askGroups();
                         }
-                        
+
                         $scope.$apply();
                     };
                     ws.onclose = () => {
-                        console.log("connect","disconnected")
+                        console.log("connect", "disconnected")
                         app.status = "disconnected";
                         setTimeout(() => {
                             connect();
@@ -126,7 +126,7 @@
                         $scope.$apply();
                     };
                     ws.onmessage = (event) => {
-                        console.log("connect","message", event.data);
+                        console.log("connect", "message", event.data);
                         try {
                             let obj = JSON.parse(event.data)
                             events[obj.event](obj.data);
@@ -136,8 +136,18 @@
                                 log = getA5Logcat(event.data);
                             } else if (checkA6Logcat(event.data)) {
                                 log = getA6Logcat(event.data);
+                            } else {
+                                log = {
+                                    date: "0",
+                                    time: "0",
+                                    process: "0",
+                                    threadid: "0",
+                                    type: "E",
+                                    message: event.data,
+                                    title: "Log"
+                                };
                             }
-                            if(log){
+                            if (log) {
                                 app.logs.push(log);
                                 $scope.$apply();
                                 if (app.autoscroll) {
@@ -156,13 +166,13 @@
                         list.forEach(group => {
                             app.groups.push(group);
                         });
-                        if (list.length > 0 && app.group=="") {
+                        if (list.length > 0 && app.group == "") {
                             app.group = list[0];
                             subscribe(list[0]);
-                            console.log("events","groups",list[0]);
-                            try{
+                            console.log("events", "groups", list[0]);
+                            try {
                                 $scope.$apply();
-                            }catch(e){}
+                            } catch (e) { }
                         }
 
                     }
@@ -205,14 +215,17 @@
                 </div>
                 <div class="me-2">
                     <input type="text" class="form-control" id="filter" placeholder="Filter" ng-model="lcm.filter">
-                  </div>
+                </div>
                 <select class="form-select form-select-sm me-2" aria-label="group" ng-model="lcm.group"
                     ng-change="lcm.onGroupSelected()">
                     <option selected value="">Device</option>
                     <option ng-repeat="group in lcm.groups" value="{{group}}">{{group}}</option>
                 </select>
                 <div class="btn btn-light me-2" ng-click="lcm.askGroups()">
-                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z"/></svg>
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <path
+                            d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z" />
+                    </svg>
                 </div>
                 <button type="button" class="btn btn-light me-2" ng-click="lcm.clear()">Clear</button>
                 <div class="alert"
