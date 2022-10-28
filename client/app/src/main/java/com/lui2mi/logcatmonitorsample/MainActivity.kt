@@ -86,7 +86,10 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             if(!com.lui2mi.logcatmonitor.utils.Utils.isServiceRunning(this)){
-                logCatMonitor = LogCatMonitor(this).putServer(server.text.toString()).putCode(code)
+                logCatMonitor = LogCatMonitor(this)
+                    .putServer(server.text.toString())
+                    .putCode(code)
+                    .setPing()
                 logCatMonitor.start()
                 logCatMonitor.intent.also { intent ->
                     bindService(intent, serviceConnection, BIND_AUTO_CREATE)

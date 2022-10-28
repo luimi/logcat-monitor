@@ -19,6 +19,13 @@ class LogCatMonitor(val context: Context) {
         intent.putExtra("code",code)
         return this
     }
+    fun setPing(interval: Long) : LogCatMonitor {
+        intent.putExtra("ping",interval)
+        return this
+    }
+    fun setPing() : LogCatMonitor {
+        return setPing(30_000)
+    }
     fun start(){
         context.startService(intent)
     }

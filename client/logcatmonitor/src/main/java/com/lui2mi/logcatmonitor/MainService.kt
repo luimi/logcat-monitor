@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import com.jaredrummler.ktsh.Shell
 import com.lui2mi.logcatmonitor.models.Event
 import com.lui2mi.logcatmonitor.models.Message
@@ -28,6 +29,17 @@ class MainService: Service() {
             ws.send(Event("send", Message(code!!, line)).toString())
         }
     }
+    var isPing: Boolean = false
+    var counter = 0
+    var pingInterval : Long = 30_000
+    val ping: Runnable = object : Runnable {
+        override fun run() {
+            counter++
+            Log.v("Ping","counter: ${counter}")
+            handler.postDelayed(this, pingInterval)
+        }
+    }
+    lateinit var handler: Handler
     override fun onBind(p0: Intent?): IBinder? {
         return binder
     }
@@ -43,11 +55,18 @@ class MainService: Service() {
             intent?.getStringExtra("code").toString()
         else
             Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID)
+        // PING
+        isPing = intent?.hasExtra("ping")!!
+        pingInterval =  intent?.getLongExtra("ping",30_000)!!
         if(server.isEmpty() || server.isBlank()){
             this.stopSelf()
         } else {
             startWebsocket()
             startLog()
+            if(isPing){
+                handler = Handler(Looper.getMainLooper())
+                handler.post(ping)
+            }
         }
         return START_NOT_STICKY
     }
@@ -55,7 +74,6 @@ class MainService: Service() {
         Thread {
             shell = Shell("sh")
             shell.addOnStdoutLineListener(stdOutLineListener)
-            //shell.run("su")
             shell.run("logcat -c")
             shell.run("logcat pid=${android.os.Process.myPid()}")
         }.start()
