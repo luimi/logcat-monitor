@@ -107,7 +107,7 @@
                 const connect = () => {
                     ws = new WebSocket(wsURL);
                     ws.onopen = () => {
-                        console.log("connect", "connected");
+                        //console.log("connect", "connected");
                         app.status = "connected";
                         if (app.group) {
                             subscribe(app.group);
@@ -118,7 +118,7 @@
                         $scope.$apply();
                     };
                     ws.onclose = () => {
-                        console.log("connect", "disconnected")
+                        //console.log("connect", "disconnected")
                         app.status = "disconnected";
                         setTimeout(() => {
                             connect();
@@ -126,7 +126,7 @@
                         $scope.$apply();
                     };
                     ws.onmessage = (event) => {
-                        console.log("connect", "message", event.data);
+                        //console.log("connect", "message", event.data);
                         try {
                             let obj = JSON.parse(event.data)
                             events[obj.event](obj.data);
@@ -169,7 +169,7 @@
                         if (list.length > 0 && app.group == "") {
                             app.group = list[0];
                             subscribe(list[0]);
-                            console.log("events", "groups", list[0]);
+                            //console.log("events", "groups", list[0]);
                             try {
                                 $scope.$apply();
                             } catch (e) { }
