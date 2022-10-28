@@ -93,6 +93,9 @@ class MainService: Service() {
         if(this::wsListener.isInitialized && wsListener.connected){
             ws.close(1000,"End")
         }
+        if(handler!=null){
+            handler.removeCallbacks(ping)
+        }
         super.onDestroy()
     }
 
