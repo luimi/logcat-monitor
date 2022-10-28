@@ -52,7 +52,9 @@
                 app.filter = "";
                 app.onGroupSelected = () => {
                     if (app.group != "") {
-                        subscribe(app.group);
+                        app.clear();
+                        setTimeout(()=>{subscribe(app.group);},300);
+                        
                     }
                 }
                 app.clear = () => {
