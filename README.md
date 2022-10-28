@@ -44,9 +44,12 @@ LogCatMonitor(this).putServer("serverUrl").start()
 
 **Doc**
 
-- `LogCatMonitor(context): LogCatMonitor` - Constructor.
-- `putServer("serverUrl"): LogCatMonitor` - Set your server url (Required).
-- `putCode("code"): LogCatMonitor` - Set this code to indentify devices in the server, by default will set androidID.
+- `LogCatMonitor(context: Context): LogCatMonitor` - Constructor.
+- `putServer(serverUrl: String): LogCatMonitor` - Set your server url (Required).
+- `putCode(code: String): LogCatMonitor` - Set this code to indentify devices in the server, by default will set androidID.
+- `setPing(inverval?: Long)` - Optional interval time to ping until stop, defaul 30sec.
+- `setFilterByTag(filters: ArrayList<String>)` - List of tags to filter.
+- `setExcludeByTag(excludes: ArrayList<String>)` - List of tags to exclude from logs.
 - `start(): void` - Starts the service in background.
 
 **Binding service**
