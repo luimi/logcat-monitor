@@ -41,8 +41,8 @@
                 const logcatMessage = /^\d+-\d+\s+\d+:\d+:\d+.\d+\s+\d+\s+\d+\s+[A-Z]\s/
                 const logcatTitle = /^[\S\s]*?:/
                 const logcatSpaces = /\s+/
-                const wsURL = $location.absUrl().replace("https","wss").replace("http","ws").replace("#!#bottom","");
-                //const wsURL = "https://logcat-monitor-production.up.railway.app/".replace("https", "wss").replace("#!#bottom", "");
+                //const wsURL = $location.absUrl().replace("https","wss").replace("http","ws").replace("#!#bottom","");
+                const wsURL = "https://logcat-monitor-production.up.railway.app/".replace("https", "wss").replace("#!#bottom", "");
                 var ws;
                 app.status = "connecting";
                 app.logs = [];
@@ -186,7 +186,7 @@
 </head>
 
 <body ng-controller="LogcatMonitorController as lcm">
-    <nav class="navbar navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container-fluid">
             <span class="navbar-brand mb-0 h1">
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="32.163 68.509 203.691 228.155">
@@ -207,37 +207,55 @@
                 </svg>
                 Logcat Monitor
             </span>
-            <div class="d-flex">
-                <div class="me-2">
-                    <input type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off"
-                        ng-model="lcm.autoscroll">
-                    <label class="btn btn-outline-light" for="btn-check-outlined">Autoscroll</label>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01"
+                aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse row-lg col-sm p-2" id="navbarTogglerDemo01">
+                <div class="row col-lg-6 col-sm-12">
+                    <div class="col-6">
+                        <select class="form-select" aria-label="group" ng-model="lcm.group"
+                        ng-change="lcm.onGroupSelected()">
+                        <option selected value="">Device</option>
+                        <option ng-repeat="group in lcm.groups" value="{{group}}">{{group}}</option>
+                    </select>
+                    </div>
+                    
+                    <!-- <div class="col-3">
+                        <input type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off"
+                            ng-model="lcm.autoscroll">
+                        <label class="btn btn-outline-light" for="btn-check-outlined">Autoscroll</label>
+                    </div> -->
+                    <div class="form-check col-3">
+                        <input class="form-check-input" type="checkbox" ng-model="lcm.autoscroll" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault" style="color: white;">
+                          Autoscroll
+                        </label>
+                      </div>
+                    <div class="btn btn-light col-3" ng-click="lcm.askGroups()">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path
+                                d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z" />
+                        </svg>
+                    </div>
                 </div>
-                <div class="me-2">
-                    <input type="text" class="form-control" id="filter" placeholder="Filter" ng-model="lcm.filter">
+                <div class="row col-lg-6 col-sm-12">
+                    <div class="col-6">
+                        <input type="text" class="form-control" id="filter" placeholder="Filter" ng-model="lcm.filter">
+                    </div>
+                    
+                    <button type="button" class="btn btn-light col-3" ng-click="lcm.clear()">Clear</button>
+                    <div class="alert col-3 text-center"
+                        ng-class="{'alert-secondary': lcm.status == 'connecting', 'alert-success': lcm.status == 'connected', 'alert-danger': lcm.status == 'disconnected'}"
+                        role="alert">
+                        {{lcm.status}}
+                    </div>
                 </div>
-                <select class="form-select form-select-sm me-2" aria-label="group" ng-model="lcm.group"
-                    ng-change="lcm.onGroupSelected()">
-                    <option selected value="">Device</option>
-                    <option ng-repeat="group in lcm.groups" value="{{group}}">{{group}}</option>
-                </select>
-                <div class="btn btn-light me-2" ng-click="lcm.askGroups()">
-                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                        <path
-                            d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z" />
-                    </svg>
-                </div>
-                <button type="button" class="btn btn-light me-2" ng-click="lcm.clear()">Clear</button>
-                <div class="alert"
-                    ng-class="{'alert-secondary': lcm.status == 'connecting', 'alert-success': lcm.status == 'connected', 'alert-danger': lcm.status == 'disconnected'}"
-                    role="alert">
-                    {{lcm.status}}
-                </div>
+                
             </div>
         </div>
     </nav>
-
-    <div class="mt-5 mb-5 p-5" id="messages">
+    <div class="mt-5 mb-5 p-lg-5 p-1" id="messages">
         <div class="card" ng-repeat="log in lcm.logs | filter: {title: lcm.filter}">
             <h5 class="card-header " ng-click="log.show=!log.show">
                 <span class="badge"
