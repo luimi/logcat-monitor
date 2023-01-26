@@ -48,7 +48,7 @@ LogCatMonitor(this).putServer("serverUrl").start()
 - `putServer(serverUrl: String): LogCatMonitor` - Set your server url (Required).
 - `putCode(code: String): LogCatMonitor` - Set this code to indentify devices in the server, by default will set androidID.
 - `setPing(inverval?: Long)` - Optional interval time to ping until stop, default 30sec.
-- `setStatusNotification(appName: Int) - Shows a notification with connection status and last log line`
+- `setStatusNotification(appName: Int)` - Shows a notification with connection status and last log line
 - `setFilterByTag(filters: ArrayList<String>)` - List of tags to filter.
 - `setExcludeByTag(excludes: ArrayList<String>)` - List of tags to exclude from logs.
 - `start(): void` - Starts the service in background.
