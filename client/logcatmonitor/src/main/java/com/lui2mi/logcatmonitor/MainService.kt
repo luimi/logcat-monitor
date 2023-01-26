@@ -11,6 +11,7 @@ import android.util.Log
 import com.jaredrummler.ktsh.Shell
 import com.lui2mi.logcatmonitor.models.Event
 import com.lui2mi.logcatmonitor.models.Message
+import com.lui2mi.logcatmonitor.utils.Notifications
 import com.lui2mi.logcatmonitor.utils.WSListener
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -29,9 +30,14 @@ class MainService: Service() {
         override fun onLine(line: String) {
             binder.callLog(line)
             ws.send(Event("send", Message(code!!, line)).toString())
+            if(isNotification){
+                lastLine = line
+                updateNotification()
+            }
         }
     }
     var isPing: Boolean = false
+    var isNotification: Boolean = false
     var counter = 0
     var pingInterval : Long = 30_000
     val ping: Runnable = object : Runnable {
@@ -42,6 +48,7 @@ class MainService: Service() {
         }
     }
     lateinit var handler: Handler
+    var lastLine = "";
     override fun onBind(p0: Intent?): IBinder? {
         return binder
     }
@@ -70,6 +77,22 @@ class MainService: Service() {
         exclude?.forEach {
             excludes += it+":S "
         }
+        // NOTIFICATION
+        isNotification = intent?.hasExtra("notification")!!
+        if(isNotification){
+            if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                val appName = intent?.getIntExtra("notification",0)!!
+                Notifications.createChannel(
+                    context = applicationContext,
+                    channelName = appName,
+                    channelDescription = appName)
+            }
+            Notifications.createNotification(
+                context = applicationContext,
+                title = "Starting LogCatMonitor",
+                content = "Please wait..."
+            )
+        }
         if(server.isEmpty() || server.isBlank()){
             this.stopSelf()
         } else {
@@ -91,12 +114,22 @@ class MainService: Service() {
         }.start()
     }
     fun startWebsocket(){
-        binder.callWs("Connecting")
         val client = OkHttpClient()
         val request = Request.Builder().url(server).build()
         wsListener = WSListener(code, binder)
         ws = client.newWebSocket(request,wsListener)
+        wsListener.status = "Connecting"
+        binder.callWs(wsListener.status)
     }
+
+    fun updateNotification() {
+        Notifications.createNotification(
+            context = applicationContext,
+            title = "Connection status: " + wsListener.status,
+            content = lastLine
+        )
+    }
+
     override fun onDestroy() {
         if(this::shell.isInitialized){
             shell.interrupt()
@@ -129,6 +162,9 @@ class MainService: Service() {
         fun callWs(status: String){
             if(isWsCallback()){
                 wsCallback(status)
+            }
+            if(isNotification){
+                updateNotification()
             }
         }
         fun reconnectWebsocket(){

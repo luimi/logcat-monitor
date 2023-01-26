@@ -8,22 +8,26 @@ import okhttp3.WebSocketListener
 
 class WSListener(val group: String, val bind: MainService.Bind): WebSocketListener() {
     var connected = false
+    var status = ""
     override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
         super.onClosed(webSocket, code, reason)
-        bind.callWs("Closed")
+        status = "Closed"
+        bind.callWs(status)
         connected = false
     }
 
     override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
         super.onClosing(webSocket, code, reason)
-        bind.callWs("Closing")
+        status = "Closing"
+        bind.callWs(status)
         connected = false
 
     }
 
     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
         super.onFailure(webSocket, t, response)
-        bind.callWs("Failure")
+        status = "Failure"
+        bind.callWs(status)
         connected = false
         bind.reconnectWebsocket()
     }
@@ -35,7 +39,8 @@ class WSListener(val group: String, val bind: MainService.Bind): WebSocketListen
     override fun onOpen(webSocket: WebSocket, response: Response) {
         super.onOpen(webSocket, response)
         connected = true
-        bind.callWs("Connected")
+        status = "Connected"
+        bind.callWs(status)
         val event = com.lui2mi.logcatmonitor.models.Event("subscribe", Subscription(group))
         webSocket.send(event.toString())
     }

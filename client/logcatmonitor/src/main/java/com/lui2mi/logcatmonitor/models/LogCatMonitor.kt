@@ -34,6 +34,10 @@ class LogCatMonitor(val context: Context) {
         intent.putExtra("exclude", excludes)
         return this
     }
+    fun setStatusNotification(appName: Int): LogCatMonitor {
+        intent.putExtra("notification",appName)
+        return this
+    }
     fun start(){
         context.startService(intent)
     }

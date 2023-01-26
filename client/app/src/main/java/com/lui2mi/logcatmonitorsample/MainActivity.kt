@@ -90,6 +90,7 @@ class MainActivity : AppCompatActivity() {
                     .putServer(server.text.toString())
                     .putCode(code)
                     .setPing()
+                    .setStatusNotification(R.string.app_name)
                     .setExcludeByTag(arrayListOf("NetworkSecurityConfig","zygote","System","View"))
                     .setFilterByTag(arrayListOf("Ping","LogCatMonitor"))
                 logCatMonitor.start()
