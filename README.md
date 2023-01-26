@@ -47,7 +47,8 @@ LogCatMonitor(this).putServer("serverUrl").start()
 - `LogCatMonitor(context: Context): LogCatMonitor` - Constructor.
 - `putServer(serverUrl: String): LogCatMonitor` - Set your server url (Required).
 - `putCode(code: String): LogCatMonitor` - Set this code to indentify devices in the server, by default will set androidID.
-- `setPing(inverval?: Long)` - Optional interval time to ping until stop, defaul 30sec.
+- `setPing(inverval?: Long)` - Optional interval time to ping until stop, default 30sec.
+- `setStatusNotification(appName: Int) - Shows a notification with connection status and last log line`
 - `setFilterByTag(filters: ArrayList<String>)` - List of tags to filter.
 - `setExcludeByTag(excludes: ArrayList<String>)` - List of tags to exclude from logs.
 - `start(): void` - Starts the service in background.
@@ -85,7 +86,7 @@ logCatMonitor.intent.also { intent ->
 
 ### Server
 
-Open server url and check you app logcat in realtime
+Open server url and check your app logcat in realtime
 
 **Doc**
 
