@@ -48,7 +48,8 @@ class MainService: Service() {
         }
     }
     lateinit var handler: Handler
-    var lastLine = "";
+    var lastLine = ""
+    var isStoped = false
     override fun onBind(p0: Intent?): IBinder? {
         return binder
     }
@@ -114,7 +115,7 @@ class MainService: Service() {
             shell.addOnCommandResultListener(object : Shell.OnCommandResultListener {
                 override fun onResult(result: Shell.Command.Result) {
                     Log.v("Shell","Ended")
-                    startLog()
+                    if(!isStoped)  startLog()
                 }
             })
             shell.run("logcat --pid=${android.os.Process.myPid()} ${filters} ${excludes}")
@@ -138,6 +139,7 @@ class MainService: Service() {
     }
 
     override fun onDestroy() {
+        isStoped = true
         if(this::shell.isInitialized){
             shell.interrupt()
             shell.removeOnStdoutLineListener(stdOutLineListener)
