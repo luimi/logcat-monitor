@@ -110,7 +110,7 @@ class MainService: Service() {
             shell = Shell("sh")
             shell.addOnStdoutLineListener(stdOutLineListener)
             shell.run("logcat -c")
-            shell.run("logcat pid=${android.os.Process.myPid()} ${filters} ${excludes}")
+            shell.run("logcat --pid=${android.os.Process.myPid()} ${filters} ${excludes}")
         }.start()
     }
     fun startWebsocket(){
