@@ -107,9 +107,16 @@ class MainService: Service() {
     }
     fun startLog(){
         Thread {
+            Log.v("Shell","Started")
             shell = Shell("sh")
             shell.addOnStdoutLineListener(stdOutLineListener)
             shell.run("logcat -c")
+            shell.addOnCommandResultListener(object : Shell.OnCommandResultListener {
+                override fun onResult(result: Shell.Command.Result) {
+                    Log.v("Shell","Ended")
+                    startLog()
+                }
+            })
             shell.run("logcat --pid=${android.os.Process.myPid()} ${filters} ${excludes}")
         }.start()
     }
